@@ -1,0 +1,1 @@
+# vsts-resharper-code-quality-task
