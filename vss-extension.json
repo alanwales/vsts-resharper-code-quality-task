@@ -1,0 +1,72 @@
+{
+    "manifestVersion": 1,
+    "id": "resharper-code-analysis",
+    "name": "Resharper Code Quality Analysis",
+    "version": "1.0.60",
+    "publisher": "alanwales",
+	"public": true,
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],    
+    "description": "Run the Resharper Command-Line Tool and automatically fail builds when code quality issues are found. Configure team-shared coding rules for seamless code quality standards enforcement on each commit",
+    "categories": [
+        "Build and release"
+    ],
+    "icons": {
+        "default": "extension-icon.png"        
+    },
+	"tags": [
+        "resharper",
+        "code quality",
+        "static code analysis"
+    ],
+	"screenshots": [
+        {
+            "path": "screenshot1.png"
+        },
+        {
+            "path": "screenshot2.png"
+        }
+    ],
+    "files": [
+        {
+            "path": "Task"
+        },
+		{
+            "path": "Images",
+			"addressable": true
+        },
+		{
+            "path": "Samples",
+			"addressable": true
+        }
+    ],
+    "contributions": [
+        {
+            "id": "custom-build-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "Task"
+            }
+        }
+    ],
+	"scopes": [
+        "vso.build",
+        "vso.build_execute"
+    ],
+	"links": {
+        "learn": {
+            "uri": "https://confluence.jetbrains.com/display/NETCOM/Introducing+InspectCode"
+        }
+    },
+	"content": {
+		"details": {
+			"path": "overview.md"
+		}
+	}
+}

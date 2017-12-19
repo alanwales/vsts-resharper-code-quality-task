@@ -1,0 +1,103 @@
+﻿{
+    "id": "357E581F-2683-4AC4-AFF6-2C2445F063C5",
+    "name": "ResharperCli",
+    "friendlyName": "Resharper Code Quality Analysis",
+    "description": "Runs the Resharper Command-Line Tool and fails the build if code quality issues are found",
+    "helpMarkDown": "[More Information](https://www.jetbrains.com/resharper/features/command-line.html)",
+    "category": "Build",
+    "visibility": [
+        "Build",
+        "Release"
+    ],
+    "author": "Alan Wales",
+    "version": {
+        "Major": 1,
+        "Minor": 0,
+        "Patch": 60
+    },
+    "demands": [
+    ],
+    "minimumAgentVersion": "1.83.0",
+        "groups": [
+        {
+            "name": "configurationOptions",
+            "displayName": "Configuration",
+            "isExpanded": true
+        },
+        {
+            "name": "advancedOptions",
+            "displayName": "Advanced Options",
+            "isExpanded": false
+        }
+    ],
+    "inputs": [
+        {
+            "name": "SolutionOrProjectPath",
+            "type": "filePath",
+            "label": "Path to .sln or .csproj file",
+            "defaultValue": "",
+            "required": true,
+            "helpMarkDown": "The path to find the solution or project file to inspect code against.",
+            "groupName":  "configurationOptions"
+        },
+        {
+            "name": "FailBuildLevelSelector",
+            "type": "pickList",
+            "label": "Fail build severity",
+            "required": true,
+            "helpMarkDown": "Issues found at or above this severity level will fail the build",
+            "defaultValue": "Warning",
+            "options": {
+                "Hint": "Hint",
+                "Suggestion": "Suggestion",
+                "Warning": "Warning",
+                "Error": "Error"
+            },
+            "groupName": "configurationOptions"
+        },
+        {
+            "name": "CommandLineInterfacePath",
+            "type": "filePath",
+            "label": "Path to command line tool",
+            "defaultValue": "$(Build.SourcesDirectory)/Lib/Resharper",
+            "required": false,
+            "helpMarkDown": "Use this setting to avoid downloading the CLT from NuGet and take it from a pre-set folder. The path can be inside the repository or a known location on the build agent (custom controller only). Inspectcode.exe must be available in this folder.",
+            "groupName":  "advancedOptions"
+        },
+        {
+            "name": "AdditionalArguments",
+            "type": "string",
+            "label": "Additional arguments",
+            "defaultValue": "/disable-settings-layers:SolutionPersonal",
+            "required": false,
+            "helpMarkDown": "Customize the additional arguments provided to the CLT as specified by the CLT documentation.",
+            "groupName":  "advancedOptions"
+        },
+		{
+            "name": "ResharperNuGetVersion",
+            "type": "string",
+            "label": "Resharper NuGet version",
+            "defaultValue": "Latest",
+            "required": false,
+            "helpMarkDown": "Allows to install and use an older version of the NuGet package found at https://www.nuget.org/packages/JetBrains.ReSharper.CommandLineTools e.g. 2016.1.20160504.105828",
+            "groupName":  "advancedOptions"
+        },
+		{
+            "name": "ResultsOutputFilePath",
+            "type": "string",
+            "label": "Results output file path",
+            "defaultValue": "",
+            "required": false,
+            "helpMarkDown": "Allows the default xml results file output location to be overridden e.g. $(Build.ArtifactStagingDirectory)\\CodeQualityResults.xml. Results file is not deleted afterwards",
+            "groupName":  "advancedOptions"
+        }
+    ],
+    "instanceNameFormat": "Automated code quality checks",
+    "execution": {
+        "PowerShell": {
+            "target": "$(currentDirectory)\\RunResharperCodeAnalysisTool.ps1",
+            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath $(SolutionOrProjectPath) -failBuildLevelSelector $(FailBuildLevelSelector) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
+            "workingDirectory": "$(currentDirectory)"
+        }
+    }
+}
