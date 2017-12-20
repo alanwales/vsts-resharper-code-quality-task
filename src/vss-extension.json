@@ -32,14 +32,14 @@
     ],
     "files": [
         {
-            "path": "Task"
+            "path": "task"
         },
 		{
-            "path": "Images",
+            "path": "images",
 			"addressable": true
         },
 		{
-            "path": "Samples",
+            "path": "samples",
 			"addressable": true
         }
     ],
@@ -66,7 +66,7 @@
     },
 	"content": {
 		"details": {
-			"path": "overview.md"
+			"path": "README.md"
 		}
 	}
 }
