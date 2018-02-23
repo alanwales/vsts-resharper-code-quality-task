@@ -6,7 +6,8 @@ param
     [string] $additionalArguments="",
     [string] $buildId="Unlabeled_Build",
     [string] $inspectCodeResultsPathOverride,
-    [string] $resharperNugetVersion="Latest"
+    [string] $resharperNugetVersion="Latest",
+    [bool] $outputIssuesWithoutFailing=$false
 )
 
 # Gather inputs
@@ -108,12 +109,14 @@ foreach($issue in $issuesElements) {
         }
 
         $filteredElements.Add($item)
+    } elseif ($outputIssuesWithoutFailing) {
+        Write-Output ("##vso[task.logissue type={0};sourcepath={1};linenumber={2};columnnumber=1]R# {3}" -f $errorType, $issue.File, $issue.Line, $issue.Message)
     }
 }
 
 # Report results output
 
-foreach ($issue in $filteredElements | Sort-Object Severity –Descending) {
+foreach ($issue in $filteredElements | Sort-Object Severity ï¿½Descending) {
     $errorType = "warning"
     if($issue.Severity -eq "Error"){
         $errorType = "error"
