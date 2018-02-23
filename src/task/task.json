@@ -56,6 +56,15 @@
             "groupName": "configurationOptions"
         },
         {
+            "name": "OutputIssuesWithoutFailing",
+            "type": "boolean",
+            "label": "Output all Code Issues without failing the build",
+            "defaultValue": "false",
+            "required": false,
+            "helpMarkDown": "If selected, all Code Issues are reported even if the build succeeds.",
+            "groupName": "configurationOptions"
+        },
+        {
             "name": "CommandLineInterfacePath",
             "type": "filePath",
             "label": "Path to command line tool",
