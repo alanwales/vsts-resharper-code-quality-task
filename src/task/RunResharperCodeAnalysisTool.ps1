@@ -3,11 +3,11 @@ param
     [string] $solutionOrProjectPath=$(throw "solutionOrProjectPath is mandatory, please provide a value."),
     [string] $commandLineInterfacePath,
     [string] $failBuildLevelSelector="Warning",
+    [bool] $outputIssuesWithoutFailing=$false,
     [string] $additionalArguments="",
     [string] $buildId="Unlabeled_Build",
     [string] $inspectCodeResultsPathOverride,
-    [string] $resharperNugetVersion="Latest",
-    [bool] $outputIssuesWithoutFailing=$false
+    [string] $resharperNugetVersion="Latest"
 )
 
 # Gather inputs
