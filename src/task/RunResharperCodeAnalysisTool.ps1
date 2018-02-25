@@ -116,7 +116,7 @@ foreach($issue in $issuesElements) {
 
 # Report results output
 
-foreach ($issue in $filteredElements | Sort-Object Severity ï¿½Descending) {
+foreach ($issue in $filteredElements | Sort-Object Severity –Descending) {
     $errorType = "warning"
     if($issue.Severity -eq "Error"){
         $errorType = "error"
