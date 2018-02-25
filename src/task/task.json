@@ -105,7 +105,7 @@
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RunResharperCodeAnalysisTool.ps1",
-            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath $(SolutionOrProjectPath) -failBuildLevelSelector $(FailBuildLevelSelector) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
+            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath $(SolutionOrProjectPath) -failBuildLevelSelector $(FailBuildLevelSelector) -outputIssuesWithoutFailing $(OutputIssuesWithoutFailing) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
             "workingDirectory": "$(currentDirectory)"
         }
     }
