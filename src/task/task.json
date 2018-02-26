@@ -56,12 +56,12 @@
             "groupName": "configurationOptions"
         },
         {
-            "name": "OutputIssuesWithoutFailing",
+            "name": "FailBuildOnCodeIssues",
             "type": "boolean",
-            "label": "Output all Code Issues without failing the build",
-            "defaultValue": "false",
+            "label": "Fail build when Code Issues are found",
+            "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If selected, all Code Issues are reported even if the build succeeds.",
+            "helpMarkDown": "If selected, the build fails if there are any Code Issue equal or above the Fail build severity.",
             "groupName": "configurationOptions"
         },
         {
@@ -105,7 +105,7 @@
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RunResharperCodeAnalysisTool.ps1",
-            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath $(SolutionOrProjectPath) -failBuildLevelSelector $(FailBuildLevelSelector) -outputIssuesWithoutFailing $(OutputIssuesWithoutFailing) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
+            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath $(SolutionOrProjectPath) -failBuildLevelSelector $(FailBuildLevelSelector) -failBuildOnCodeIssues $(FailBuildOnCodeIssues) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
             "workingDirectory": "$(currentDirectory)"
         }
     }

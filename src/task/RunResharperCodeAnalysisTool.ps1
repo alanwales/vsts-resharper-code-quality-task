@@ -3,7 +3,7 @@ param
     [string] $solutionOrProjectPath=$(throw "solutionOrProjectPath is mandatory, please provide a value."),
     [string] $commandLineInterfacePath,
     [string] $failBuildLevelSelector="Warning",
-    [bool] $outputIssuesWithoutFailing=$false,
+    [bool] $failBuildOnCodeIssues=$true,
     [string] $additionalArguments="",
     [string] $buildId="Unlabeled_Build",
     [string] $inspectCodeResultsPathOverride,
@@ -109,8 +109,6 @@ foreach($issue in $issuesElements) {
         }
 
         $filteredElements.Add($item)
-    } elseif ($outputIssuesWithoutFailing) {
-        Write-Output ("##vso[task.logissue type={0};sourcepath={1};linenumber={2};columnnumber=1]R# {3}" -f $errorType, $issue.File, $issue.Line, $issue.Message)
     }
 }
 
@@ -139,6 +137,10 @@ $summaryMessage = ""
 
 if($filteredElements.Count -eq 0) {
     $summaryMessage = "No code quality issues found!"
+    Write-Output ("##vso[task.complete result=Succeeded;]{0}" -f $summaryMessage)
+    Add-Content $summaryFilePath ($summaryMessage)
+} elseif (-Not $failBuildOnCodeIssues) {
+    $summaryMessage = "{0} code quality issues found" -f $filteredElements.Count
     Write-Output ("##vso[task.complete result=Succeeded;]{0}" -f $summaryMessage)
     Add-Content $summaryFilePath ($summaryMessage)
 } elseif($filteredElements.Count -eq 1) {
