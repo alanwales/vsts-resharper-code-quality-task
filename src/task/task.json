@@ -61,7 +61,7 @@
             "label": "Fail build when Code Issues are found",
             "defaultValue": "true",
             "required": false,
-            "helpMarkDown": "If selected, the build fails if there are any Code Issue equal or above the Fail build severity.",
+            "helpMarkDown": "If selected, the build fails if there are any Code Issues equal or above the Fail build severity.",
             "groupName": "configurationOptions"
         },
         {
