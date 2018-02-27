@@ -10,6 +10,18 @@ param
     [string] $resharperNugetVersion="Latest"
 )
 
+function Set-Results {
+    param(
+        [string]
+        $summaryMessage,
+        [ValidateSet("Succeeded", "Failed")]
+        [string]
+        $buildResult
+    )
+    Write-Output ("##vso[task.complete result={0}};]{1}" -f $buildResult, $summaryMessage)
+    Add-Content $summaryFilePath ($summaryMessage)
+}
+
 # Gather inputs
 
 $inspectCodeExePath = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($commandLineInterfacePath, "InspectCode.exe"));
@@ -135,27 +147,14 @@ New-Item $summaryFilePath -type file -force
 
 $summaryMessage = ""
 
-function Set-Results {
-    param(
-        [string]
-        $summaryMessage,
-        [ValidateSet("Succeeded", "Failed")]
-        [string]
-        $buildResult
-    )
-    Write-Output ("##vso[task.complete result={0}};]{1}" -f $buildResult, $summaryMessage)
-    Add-Content $summaryFilePath ($summaryMessage)
-}
-
 if ($failBuildOnCodeIssues) {
     if($filteredElements.Count -eq 0) {
-        Set-Results -summaryMessage "No code quality issues found!" -buildResult "Succeeded"
+        Set-Results -summaryMessage "No code quality issues found" -buildResult "Succeeded"
     } elseif($filteredElements.Count -eq 1) {
         Set-Results -summaryMessage "One code quality issue found" -buildResult "Failed"
     } else {
         $summaryMessage = "{0} code quality issues found" -f $filteredElements.Count
-        Write-Output ("##vso[task.complete result=Failed;]{0}" -f $summaryMessage)
-        Add-Content $summaryFilePath ("**{0}** code quality issues found" -f $filteredElements.Count)
+        Set-Results -summaryMessage $summaryMessage -buildResult "Failed"
     }
 } else {
     $summaryMessage = "{0} code quality issues found" -f $filteredElements.Count
