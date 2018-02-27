@@ -46,7 +46,7 @@ if(!(Test-Path $inspectCodeExePath)) {
 
     $nugetExeLocation = [System.IO.Path]::Combine($tempDownloadFolder, "nuget.exe")
 
-    $nugetArguments = "install JetBrains.ReSharper.CommandLineTools"
+    $nugetArguments = "install JetBrains.ReSharper.CommandLineTools -source https://api.nuget.org/v3/index.json"
     if($useSpecificNuGetVersion){
         $nugetArguments += " -Version $resharperNugetVersion"
     }
