@@ -3,7 +3,7 @@ param
     [string] $solutionOrProjectPath=$(throw "solutionOrProjectPath is mandatory, please provide a value."),
     [string] $commandLineInterfacePath,
     [string] $failBuildLevelSelector="Warning",
-    [bool] $failBuildOnCodeIssues=$true,
+    [string] $failBuildOnCodeIssues="true",
     [string] $additionalArguments="",
     [string] $buildId="Unlabeled_Build",
     [string] $inspectCodeResultsPathOverride,
@@ -18,7 +18,7 @@ function Set-Results {
         [string]
         $buildResult
     )
-    Write-Output ("##vso[task.complete result={0}};]{1}" -f $buildResult, $summaryMessage)
+    Write-Output ("##vso[task.complete result={0};]{1}" -f $buildResult, $summaryMessage)
     Add-Content $summaryFilePath ($summaryMessage)
 }
 
@@ -147,7 +147,9 @@ New-Item $summaryFilePath -type file -force
 
 $summaryMessage = ""
 
-if ($failBuildOnCodeIssues) {
+[bool] $failBuildOnCodeIssuesBool = [System.Convert]::ToBoolean($failBuildOnCodeIssues)
+
+if ($failBuildOnCodeIssuesBool) {
     if($filteredElements.Count -eq 0) {
         Set-Results -summaryMessage "No code quality issues found" -buildResult "Succeeded"
     } elseif($filteredElements.Count -eq 1) {
