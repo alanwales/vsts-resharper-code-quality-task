@@ -13,7 +13,7 @@
     "version": {
         "Major": 1,
         "Minor": 0,
-        "Patch": 60
+        "Patch": 62
     },
     "demands": [
     ],
@@ -105,7 +105,7 @@
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RunResharperCodeAnalysisTool.ps1",
-            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath $(SolutionOrProjectPath) -failBuildLevelSelector $(FailBuildLevelSelector) -failBuildOnCodeIssues $(FailBuildOnCodeIssues) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
+            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath \"$(SolutionOrProjectPath)\" -failBuildLevelSelector $(FailBuildLevelSelector) -failBuildOnCodeIssues $(FailBuildOnCodeIssues) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
             "workingDirectory": "$(currentDirectory)"
         }
     }
