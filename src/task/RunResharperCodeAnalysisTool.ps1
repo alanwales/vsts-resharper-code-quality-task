@@ -55,7 +55,7 @@ if(!(Test-Path $inspectCodeExePath)) {
     Throw [System.IO.FileNotFoundException] "InspectCode.exe was not found at $inspectCodeExePath"
 }
 
-[string] $solutionOrProjectFullPath = [System.IO.Path]::GetFullPath($solutionOrProjectPath);
+[string] $solutionOrProjectFullPath = [System.IO.Path]::GetFullPath($solutionOrProjectPath.Replace("`"",""));
 
 if(!(Test-Path $solutionOrProjectFullPath)) {
     Throw [System.IO.FileNotFoundException] "No solution or project found at $solutionOrProjectFullPath"
