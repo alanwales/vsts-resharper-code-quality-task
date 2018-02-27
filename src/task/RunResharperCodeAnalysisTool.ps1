@@ -3,11 +3,24 @@ param
     [string] $solutionOrProjectPath=$(throw "solutionOrProjectPath is mandatory, please provide a value."),
     [string] $commandLineInterfacePath,
     [string] $failBuildLevelSelector="Warning",
+    [bool] $failBuildOnCodeIssues=$true,
     [string] $additionalArguments="",
     [string] $buildId="Unlabeled_Build",
     [string] $inspectCodeResultsPathOverride,
     [string] $resharperNugetVersion="Latest"
 )
+
+function Set-Results {
+    param(
+        [string]
+        $summaryMessage,
+        [ValidateSet("Succeeded", "Failed")]
+        [string]
+        $buildResult
+    )
+    Write-Output ("##vso[task.complete result={0}};]{1}" -f $buildResult, $summaryMessage)
+    Add-Content $summaryFilePath ($summaryMessage)
+}
 
 # Gather inputs
 
@@ -113,7 +126,7 @@ foreach($issue in $issuesElements) {
 
 # Report results output
 
-foreach ($issue in $filteredElements | Sort-Object Severity –Descending) {
+foreach ($issue in $filteredElements | Sort-Object Severity -Descending) {
     $errorType = "warning"
     if($issue.Severity -eq "Error"){
         $errorType = "error"
@@ -134,18 +147,18 @@ New-Item $summaryFilePath -type file -force
 
 $summaryMessage = ""
 
-if($filteredElements.Count -eq 0) {
-    $summaryMessage = "No code quality issues found!"
-    Write-Output ("##vso[task.complete result=Succeeded;]{0}" -f $summaryMessage)
-    Add-Content $summaryFilePath ($summaryMessage)
-} elseif($filteredElements.Count -eq 1) {
-    $summaryMessage = "One code quality issue found"
-    Write-Output ("##vso[task.complete result=Failed;]{0}" -f $summaryMessage)
-    Add-Content $summaryFilePath ($summaryMessage)
+if ($failBuildOnCodeIssues) {
+    if($filteredElements.Count -eq 0) {
+        Set-Results -summaryMessage "No code quality issues found" -buildResult "Succeeded"
+    } elseif($filteredElements.Count -eq 1) {
+        Set-Results -summaryMessage "One code quality issue found" -buildResult "Failed"
+    } else {
+        $summaryMessage = "{0} code quality issues found" -f $filteredElements.Count
+        Set-Results -summaryMessage $summaryMessage -buildResult "Failed"
+    }
 } else {
     $summaryMessage = "{0} code quality issues found" -f $filteredElements.Count
-    Write-Output ("##vso[task.complete result=Failed;]{0}" -f $summaryMessage)
-    Add-Content $summaryFilePath ("**{0}** code quality issues found" -f $filteredElements.Count)
+    Set-Results -summaryMessage $summaryMessage -buildResult "Succeeded"
 }
 
 Write-Output "##vso[task.addattachment type=Distributedtask.Core.Summary;name=Code Quality Analysis;]$summaryFilePath"

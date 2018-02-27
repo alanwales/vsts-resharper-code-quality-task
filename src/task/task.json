@@ -56,6 +56,15 @@
             "groupName": "configurationOptions"
         },
         {
+            "name": "FailBuildOnCodeIssues",
+            "type": "boolean",
+            "label": "Fail build when Code Issues are found",
+            "defaultValue": "true",
+            "required": false,
+            "helpMarkDown": "If selected, the build fails if there are any Code Issues equal or above the Fail build severity.",
+            "groupName": "configurationOptions"
+        },
+        {
             "name": "CommandLineInterfacePath",
             "type": "filePath",
             "label": "Path to command line tool",
@@ -96,7 +105,7 @@
     "execution": {
         "PowerShell": {
             "target": "$(currentDirectory)\\RunResharperCodeAnalysisTool.ps1",
-            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath \"$(SolutionOrProjectPath)\" -failBuildLevelSelector $(FailBuildLevelSelector) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
+            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath \"$(SolutionOrProjectPath)\" -failBuildLevelSelector $(FailBuildLevelSelector) -failBuildOnCodeIssues $(FailBuildOnCodeIssues) -additionalArguments $(AdditionalArguments) -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
             "workingDirectory": "$(currentDirectory)"
         }
     }
