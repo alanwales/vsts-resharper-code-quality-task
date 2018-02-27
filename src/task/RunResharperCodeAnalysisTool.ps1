@@ -3,7 +3,7 @@ param
     [string] $solutionOrProjectPath=$(throw "solutionOrProjectPath is mandatory, please provide a value."),
     [string] $commandLineInterfacePath,
     [string] $failBuildLevelSelector="Warning",
-    [bool] $failBuildOnCodeIssues=$true,
+    [string] $failBuildOnCodeIssues="true",
     [string] $additionalArguments="",
     [string] $buildId="Unlabeled_Build",
     [string] $inspectCodeResultsPathOverride,
@@ -147,7 +147,9 @@ New-Item $summaryFilePath -type file -force
 
 $summaryMessage = ""
 
-if ($failBuildOnCodeIssues) {
+[bool] $failBuildOnCodeIssuesBool = Convert-String $failBuildOnCodeIssues Boolean
+
+if ($failBuildOnCodeIssuesBool) {
     if($filteredElements.Count -eq 0) {
         Set-Results -summaryMessage "No code quality issues found" -buildResult "Succeeded"
     } elseif($filteredElements.Count -eq 1) {
