@@ -147,7 +147,7 @@ New-Item $summaryFilePath -type file -force
 
 $summaryMessage = ""
 
-[bool] $failBuildOnCodeIssuesBool = Convert-String $failBuildOnCodeIssues Boolean
+[bool] $failBuildOnCodeIssuesBool = [System.Convert]::ToBoolean($failBuildOnCodeIssues)
 
 if ($failBuildOnCodeIssuesBool) {
     if($filteredElements.Count -eq 0) {
