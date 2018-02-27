@@ -18,7 +18,7 @@ function Set-Results {
         [string]
         $buildResult
     )
-    Write-Output ("##vso[task.complete result={0}};]{1}" -f $buildResult, $summaryMessage)
+    Write-Output ("##vso[task.complete result={0};]{1}" -f $buildResult, $summaryMessage)
     Add-Content $summaryFilePath ($summaryMessage)
 }
 
