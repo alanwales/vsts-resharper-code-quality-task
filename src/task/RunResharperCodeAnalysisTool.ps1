@@ -110,6 +110,10 @@ $filteredElements = New-Object System.Collections.Generic.List[System.Object]
 foreach($issue in $issuesElements) {
     $severity = @($issuesTypesElements | Where-Object {$_.Attributes["Id"].Value -eq $issue.Attributes["TypeId"].Value})[0].Attributes["Severity"].Value
 
+    if($severity -eq "INVALID_SEVERITY") {
+        $severity = $issue.Attributes["Severity"].Value
+    }
+
     $severityLevel = $severityLevels[$severity]
 
     if($severityLevel -ge $severityLevels[$failBuildLevelSelector]) {
