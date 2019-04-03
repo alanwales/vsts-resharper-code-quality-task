@@ -25,7 +25,7 @@ function Set-Results {
 # Gather inputs
 
 $inspectCodeExePath = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($commandLineInterfacePath, "InspectCode.exe"));
-$tempDownloadFolder = $Env:BUILD_STAGINGDIRECTORY
+$tempDownloadFolder = $Env:AGENT_BUILDDIRECTORY
 
 if(!(Test-Path $inspectCodeExePath)) {
     # Download Resharper from nuget
