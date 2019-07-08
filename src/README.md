@@ -54,4 +54,6 @@ Copy the folder into your repository and check the downloaded files in. The defa
 Either check the files in as above or copy them to the build controller. The path can then be configured to an absolute path, for example C:\Tools\Resharper.
 
 ### Legal
-This extension is provided as-is, without warranty of any kind, express or implied. Resharper is a registered trademark of JetBrains and the extension is produced independently of JetBrains.
+This extension is provided as-is, without warranty of any kind, express or implied.
+
+Resharper is a registered trademark of JetBrains and the extension is produced independently of JetBrains. Support questions should be posted in the above Q&A section.
