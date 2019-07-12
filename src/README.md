@@ -8,6 +8,48 @@ Based on the free-to-use Resharper Command-Line Tools (CLT), this build task wil
 * Set the path to your solution (.sln) or project (.csproj) file
 * That's it!
 
+** Yaml Pipeline Sample **
+```yaml
+name: 'Sample Code Quality Job'
+
+trigger:
+- master
+
+variables:
+- name: 'Build.Target'
+  value: 'src/Test.sln'
+- name: 'Build.Configuration'
+  value: 'Debug'
+- name: 'DotNet.Sdk.Version'
+  value: '3.0.100-preview6-012264'
+
+stages:
+- stage: Build
+  jobs:
+  - job: CodeAnalysisJob
+    pool:
+      vmImage: 'windows-2019' # note that the Resharper CLT will only work on a windows machine or container
+    steps:
+      - task: DotNetCoreInstaller@0
+        displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
+        inputs:
+          version: '$(DotNet.Sdk.Version)'
+
+      - task: DotNetCoreCLI@2
+        displayName: 'Build Target ($(Build.Target))'
+        inputs:
+          command: build
+          projects: '$(Build.Target)'
+          arguments: '--configuration $(Build.Configuration)'
+
+      - task: ResharperCli@1
+        inputs:
+          SolutionOrProjectPath: '$(Build.Target)'
+          AdditionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
+        env:
+          MSBuildSDKsPath: '$(Agent.ToolsDirectory)/dncs/$(DotNet.Sdk.Version)/x64/sdk/$(DotNet.Sdk.Version)/Sdks'
+```
+
 **Task Configuration**
 ![taskconfiguration](images/taskconfiguration.png )
 
