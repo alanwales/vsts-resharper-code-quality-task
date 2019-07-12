@@ -8,7 +8,7 @@ Based on the free-to-use Resharper Command-Line Tools (CLT), this build task wil
 * Set the path to your solution (.sln) or project (.csproj) file
 * That's it!
 
-** Yaml Pipeline Sample **
+**Yaml Pipeline Sample**
 ```yaml
 name: 'Sample Code Quality Job'
 
