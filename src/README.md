@@ -8,6 +8,11 @@ Based on the free-to-use Resharper Command-Line Tools (CLT), this build task wil
 * Set the path to your solution (.sln) or project (.csproj) file
 * That's it!
 
+**Task Versions**
+> **Use Version 1 of the task** for .Net Core 2 and .Net Framework projects with the VS 2017 hosted agent for best results
+
+> **Use Version 2 of the task** for .Net Core 3 projects using the Yaml pipeline sample for best results
+
 **Yaml Pipeline Sample**
 ```yaml
 name: 'Sample Code Quality Job'
@@ -20,21 +25,20 @@ variables:
   value: 'src/Test.sln'
 - name: 'Build.Configuration'
   value: 'Debug'
-- name: 'DotNet.Sdk.Version'
-  value: '3.0.100-preview6-012264'
 
 stages:
 - stage: Build
   jobs:
-  - job: CodeAnalysisJob
+  - job: CodeAnalysis
     pool:
       vmImage: 'windows-2019' # note that the Resharper CLT will only work on a windows machine or container
     steps:
-      - task: DotNetCoreInstaller@0
-        displayName: 'Import .Net Core Sdk ($(DotNet.Sdk.Version))'
+      - task: UseDotNet@2
+        displayName: 'Import .Net Sdk'
         inputs:
-          version: '$(DotNet.Sdk.Version)'
-
+          packageType: 'sdk'
+          version: '3.0.100-preview8-013656'
+		
       - task: DotNetCoreCLI@2
         displayName: 'Build Target ($(Build.Target))'
         inputs:
@@ -42,19 +46,29 @@ stages:
           projects: '$(Build.Target)'
           arguments: '--configuration $(Build.Configuration)'
 
-      - task: ResharperCli@1
+      - task: ResharperCli@2
         inputs:
-          SolutionOrProjectPath: '$(Build.Target)'
-          AdditionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
-        env:
-          MSBuildSDKsPath: '$(Agent.ToolsDirectory)/dncs/$(DotNet.Sdk.Version)/x64/sdk/$(DotNet.Sdk.Version)/Sdks'
+          solutionOrProjectPath: '$(Build.Target)'
+          additionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
 ```
 
-**Task Configuration**
+Note! For the Yaml pipeline to work as above with .Net Core 3.0 preview it will only work if there is a global.json file in the same directory as the solution. Add a file like this to locate the Sdk correctly:
+
+```json
+{
+  "sdk": {
+	"version": "3.0.100-preview8"
+  }
+}
+```
+
+**Classic Pipeline Sample**
 ![taskconfiguration](images/taskconfiguration.png )
 
 **Build Result**
 ![output](images/output.png )
+
+![summary](images/extension-tab.png )
 
 ### Usage
 

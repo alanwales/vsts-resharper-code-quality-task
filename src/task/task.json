@@ -11,13 +11,13 @@
     ],
     "author": "Alan Wales",
     "version": {
-        "Major": 1,
+        "Major": 2,
         "Minor": 0,
-        "Patch": 76
+        "Patch": 15
     },
     "demands": [
     ],
-    "minimumAgentVersion": "1.83.0",
+    "minimumAgentVersion": "1.95.0",
         "groups": [
         {
             "name": "configurationOptions",
@@ -32,7 +32,7 @@
     ],
     "inputs": [
         {
-            "name": "SolutionOrProjectPath",
+            "name": "solutionOrProjectPath",
             "type": "filePath",
             "label": "Path to .sln or .csproj file",
             "defaultValue": "",
@@ -41,7 +41,7 @@
             "groupName":  "configurationOptions"
         },
         {
-            "name": "FailBuildLevelSelector",
+            "name": "failBuildLevelSelector",
             "type": "pickList",
             "label": "Fail build severity",
             "required": true,
@@ -56,7 +56,7 @@
             "groupName": "configurationOptions"
         },
         {
-            "name": "FailBuildOnCodeIssues",
+            "name": "failBuildOnCodeIssues",
             "type": "boolean",
             "label": "Fail build when Code Issues are found",
             "defaultValue": "true",
@@ -65,7 +65,7 @@
             "groupName": "configurationOptions"
         },
         {
-            "name": "CommandLineInterfacePath",
+            "name": "commandLineInterfacePath",
             "type": "filePath",
             "label": "Path to command line tool",
             "defaultValue": "$(Build.SourcesDirectory)/Lib/Resharper",
@@ -74,7 +74,7 @@
             "groupName":  "advancedOptions"
         },
         {
-            "name": "AdditionalArguments",
+            "name": "additionalArguments",
             "type": "string",
             "label": "Additional arguments",
             "defaultValue": "/disable-settings-layers:SolutionPersonal",
@@ -83,7 +83,7 @@
             "groupName":  "advancedOptions"
         },
 		{
-            "name": "ResharperNuGetVersion",
+            "name": "resharperNuGetVersion",
             "type": "string",
             "label": "Resharper NuGet version",
             "defaultValue": "Latest",
@@ -92,7 +92,7 @@
             "groupName":  "advancedOptions"
         },
 		{
-            "name": "ResultsOutputFilePath",
+            "name": "resultsOutputFilePath",
             "type": "string",
             "label": "Results output file path",
             "defaultValue": "",
@@ -103,10 +103,12 @@
     ],
     "instanceNameFormat": "Automated code quality checks",
     "execution": {
-        "PowerShell": {
+        "PowerShell3": {
             "target": "$(currentDirectory)\\RunResharperCodeAnalysisTool.ps1",
-            "argumentFormat": "-commandLineInterfacePath $(CommandLineInterfacePath) -solutionOrProjectPath \"$(SolutionOrProjectPath)\" -failBuildLevelSelector $(FailBuildLevelSelector) -failBuildOnCodeIssues $(FailBuildOnCodeIssues) -additionalArguments \"$(AdditionalArguments)\" -buildId $(Build.BuildId) -inspectCodeResultsPathOverride $(ResultsOutputFilePath) -resharperNugetVersion $(ResharperNuGetVersion)",
-            "workingDirectory": "$(currentDirectory)"
+            "workingDirectory": "$(currentDirectory)",
+			"platforms": [
+                "windows"
+            ]
         }
     }
 }
