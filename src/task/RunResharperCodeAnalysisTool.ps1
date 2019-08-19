@@ -1,14 +1,31 @@
-param
-(
-    [string] $solutionOrProjectPath=$(throw "solutionOrProjectPath is mandatory, please provide a value."),
-    [string] $commandLineInterfacePath,
-    [string] $failBuildLevelSelector="Warning",
-    [string] $failBuildOnCodeIssues="true",
-    [string] $additionalArguments="",
-    [string] $buildId="Unlabeled_Build",
-    [string] $inspectCodeResultsPathOverride,
-    [string] $resharperNugetVersion="Latest"
-)
+$solutionOrProjectPath = Get-VstsInput -Name "solutionOrProjectPath"
+$additionalArguments = Get-VstsInput -Name "additionalArguments"
+$commandLineInterfacePath = Get-VstsInput -Name "commandLineInterfacePath"
+$failBuildLevelSelector = Get-VstsInput -Name "failBuildLevelSelector"
+$failBuildOnCodeIssues = Get-VstsInput -Name "failBuildOnCodeIssues"
+$buildId = Get-VstsInput -Name "buildId"
+$inspectCodeResultsPathOverride = Get-VstsInput -Name "resultsOutputFilePath"
+$resharperNugetVersion = Get-VstsInput -Name "resharperNugetVersion"
+
+if(!$solutionOrProjectPath) {
+    Throw [System.IO.FileNotFoundException] "solutionOrProjectPath is mandatory, please provide a value."
+}
+
+if(!$failBuildLevelSelector) {
+    $failBuildLevelSelector = "Warning"
+}
+
+if(!$failBuildOnCodeIssues) {
+    $failBuildOnCodeIssues = "true"
+}
+
+if(!$buildId) {
+    $buildId = "Unlabeled_Build"
+}
+
+if(!$resharperNugetVersion) {
+    $resharperNugetVersion = "Latest"
+}
 
 function Set-Results {
     param(
@@ -90,11 +107,18 @@ Write-Output "Inspecting code for $solutionOrProjectPath"
 
 # Run code analysis
 
-$arguments = """$solutionOrProjectFullPath"" /o:""$inspectCodeResultsPath"" $additionalArguments"
+$additionalArguments = $additionalArguments -replace '"',''''
 
-Write-Output "Invoking InspectCode.exe using arguments $arguments" 
+$arguments = """$solutionOrProjectFullPath"" /o:""$inspectCodeResultsPath"" ""$additionalArguments"""
 
-Start-Process -FilePath $inspectCodeExePath -ArgumentList $arguments -Wait
+Write-Output "Invoking InspectCode.exe using arguments $arguments"
+
+$stdOutputFile = "./stdout.txt"
+Start-Process -FilePath $inspectCodeExePath -ArgumentList $arguments -Wait -RedirectStandardOutput $stdOutputFile
+if(Test-Path $stdOutputFile) {
+    $stdOutputFileContent = Get-Content "$stdOutputFile"
+    Write-Output $stdOutputFileContent
+}
 
 # Analyse results
 
@@ -138,14 +162,6 @@ foreach ($issue in $filteredElements | Sort-Object Severity -Descending) {
     Write-Output ("##vso[task.logissue type={0};sourcepath={1};linenumber={2};columnnumber=1]R# {3}" -f $errorType, $issue.File, $issue.Line, $issue.Message)
 }
 
-$taskCommonTools = "Microsoft.TeamFoundation.DistributedTask.Task.Common"
-if (Get-Module -ListAvailable -Name $taskCommonTools) {
-    Write-Output "Preparing to add summary to build results"
-} else {
-    Throw [System.IO.FileNotFoundException] "Module $taskCommonTools is not installed. If using a custom build controller ensure that this library is correctly installed and available for use in PowerShell."
-}
-
-import-module $taskCommonTools
 $summaryFilePath = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($tempDownloadFolder, "Summary.md"));
 New-Item $summaryFilePath -type file -force
 
