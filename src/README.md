@@ -37,7 +37,7 @@ stages:
         displayName: 'Import .Net Sdk'
         inputs:
           packageType: 'sdk'
-          version: '3.0.100-preview8-013656'
+          version: '3.0.100'
 		
       - task: DotNetCoreCLI@2
         displayName: 'Build Target ($(Build.Target))'
@@ -50,16 +50,6 @@ stages:
         inputs:
           solutionOrProjectPath: '$(Build.Target)'
           additionalArguments: '/disable-settings-layers:SolutionPersonal --properties:Configuration=$(Build.Configuration)'
-```
-
-Note! For the Yaml pipeline to work as above with .Net Core 3.0 preview it will only work if there is a global.json file in the same directory as the solution. Add a file like this to locate the Sdk correctly:
-
-```json
-{
-  "sdk": {
-	"version": "3.0.100-preview8"
-  }
-}
 ```
 
 **Classic Pipeline Sample**

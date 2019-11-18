@@ -2,7 +2,7 @@
     "manifestVersion": 1,
     "id": "resharper-code-analysis",
     "name": "Resharper Code Quality Analysis",
-    "version": "2.0.15",
+    "version": "2.0.16",
     "publisher": "alanwales",
 	"public": true,
     "targets": [
