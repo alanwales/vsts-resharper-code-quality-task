@@ -131,8 +131,13 @@ $issuesElements = $xmlContent | Select-Xml $issuesXpath | Select -Expand Node
 
 $filteredElements = New-Object System.Collections.Generic.List[System.Object]
 
+$issuesTypesHashTable = @{ }
+foreach($issueType in $issuesTypesElements) {
+    $issuesTypesHashTable.Add($issueType.Attributes["Id"].Value, $issueType.Attributes["Severity"].Value);
+}
+
 foreach($issue in $issuesElements) {
-    $severity = @($issuesTypesElements | Where-Object {$_.Attributes["Id"].Value -eq $issue.Attributes["TypeId"].Value})[0].Attributes["Severity"].Value
+    $severity = $issuesTypesHashTable[$issue.Attributes["TypeId"].Value]
 
     if($severity -eq "INVALID_SEVERITY") {
         $severity = $issue.Attributes["Severity"].Value
