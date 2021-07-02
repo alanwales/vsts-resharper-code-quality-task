@@ -125,6 +125,10 @@ if(Test-Path $stdOutputFile) {
 $xmlContent = [xml] (Get-Content "$inspectCodeResultsPath")
 $issuesTypesXpath = "/Report/IssueTypes//IssueType"
 $issuesTypesElements = $xmlContent | Select-Xml $issuesTypesXpath | Select -Expand Node
+$issueTypesLookup = @{}
+foreach ($issueType in $issuesTypesElements) {
+    $issueTypesLookup.Add($issueType.Attributes["Id"].Value, $issueType)
+}
 
 $issuesXpath = "/Report/Issues//Issue"
 $issuesElements = $xmlContent | Select-Xml $issuesXpath | Select -Expand Node
@@ -132,7 +136,7 @@ $issuesElements = $xmlContent | Select-Xml $issuesXpath | Select -Expand Node
 $filteredElements = New-Object System.Collections.Generic.List[System.Object]
 
 foreach($issue in $issuesElements) {
-    $severity = @($issuesTypesElements | Where-Object {$_.Attributes["Id"].Value -eq $issue.Attributes["TypeId"].Value})[0].Attributes["Severity"].Value
+    $severity = $issueTypesLookup[$issue.Attributes["TypeId"].Value].Attributes["Severity"].Value
 
     if($severity -eq "INVALID_SEVERITY") {
         $severity = $issue.Attributes["Severity"].Value
