@@ -113,12 +113,7 @@ $arguments = """$solutionOrProjectFullPath"" /o:""$inspectCodeResultsPath"" ""$a
 
 Write-Output "Invoking InspectCode.exe using arguments $arguments"
 
-$stdOutputFile = "./stdout.txt"
-Start-Process -FilePath $inspectCodeExePath -ArgumentList $arguments -Wait -RedirectStandardOutput $stdOutputFile
-if(Test-Path $stdOutputFile) {
-    $stdOutputFileContent = Get-Content "$stdOutputFile"
-    Write-Output $stdOutputFileContent
-}
+Start-Process -FilePath $inspectCodeExePath -ArgumentList $arguments -Wait -NoNewWindow
 
 # Analyse results
 
