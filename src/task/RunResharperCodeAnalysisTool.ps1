@@ -107,9 +107,7 @@ Write-Output "Inspecting code for $solutionOrProjectPath"
 
 # Run code analysis
 
-$additionalArguments = $additionalArguments -replace '"',''''
-
-$arguments = """$solutionOrProjectFullPath"" /o:""$inspectCodeResultsPath"" ""$additionalArguments"""
+$arguments = """$solutionOrProjectFullPath"" /o:""$inspectCodeResultsPath"" $additionalArguments"
 
 Write-Output "Invoking InspectCode.exe using arguments $arguments"
 
